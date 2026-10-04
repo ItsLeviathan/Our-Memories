@@ -1,0 +1,63 @@
+# Renders queued monthly recaps on GitHub's servers.
+#
+# Triggered instantly by the website when someone clicks "Generate recap"
+# (workflow_dispatch via the GitHub API), and on a schedule as a safety net:
+# it picks up the monthly automatic recap and any retries. The worker runs in
+# RUN_ONCE mode: it processes every queued job, then exits.
+
+name: Recap worker
+
+on:
+  workflow_dispatch:
+  schedule:
+    # 06:20 UTC daily (after the Vercel cron queues last month's recap at 06:00),
+    # plus every 3 hours for retries.
+    - cron: "20 6 * * *"
+    - cron: "40 */3 * * *"
+
+# Never run two workers at once; extra triggers wait for the current run.
+concurrency:
+  group: recap-worker
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: worker
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: worker/package-lock.json
+
+      - name: Install ffmpeg and fonts
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq --no-install-recommends ffmpeg fonts-inter fonts-ebgaramond
+          fc-cache -f
+
+      - name: Install and build
+        run: npm ci && npm run build
+
+      - name: Process queued recaps
+        run: node dist/index.js
+        env:
+          RUN_ONCE: "true"
+          WORKER_ID: github-${{ github.run_id }}
+          FFMPEG_PATH: /usr/bin/ffmpeg
+          RENDER_CONCURRENCY: "4"
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_BUCKET_NAME: ${{ secrets.R2_BUCKET_NAME }}

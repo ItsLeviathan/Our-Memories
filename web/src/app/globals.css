@@ -1,0 +1,156 @@
+@import "tailwindcss";
+
+/*
+ * Our Memories — design tokens.
+ * Neutral, warm foundation; a single restrained accent used sparingly
+ * (favorites, focus, selected states). Photos carry the color.
+ */
+
+:root {
+  --bg: #f8f6f2;
+  --surface: #ffffff;
+  --surface-2: #f0ede7;
+  --fg: #1d1c1a;
+  --fg-soft: #3b3936;
+  --muted: #75706a;
+  --line: #e4dfd7;
+  --line-strong: #cfc8bd;
+  --accent: #b4563f;
+  --accent-soft: #f4e3dc;
+  --danger: #b3261e;
+  --success: #2f6b4f;
+  --overlay: rgb(14 13 12 / 0.96);
+  --shadow: 0 1px 2px rgb(29 28 26 / 0.04), 0 8px 24px rgb(29 28 26 / 0.06);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d0c0b;
+    --surface: #161514;
+    --surface-2: #1e1d1b;
+    --fg: #f2efea;
+    --fg-soft: #d6d1ca;
+    --muted: #9b958d;
+    --line: #2a2826;
+    --line-strong: #3a3734;
+    --accent: #e3907b;
+    --accent-soft: #3a231d;
+    --danger: #f2867e;
+    --success: #7cc4a0;
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 8px 24px rgb(0 0 0 / 0.35);
+    color-scheme: dark;
+  }
+}
+
+/* The public album is always presented in the dark, cinematic theme. */
+[data-theme="dark"] {
+  --bg: #0b0a09;
+  --surface: #141312;
+  --surface-2: #1c1b19;
+  --fg: #f3f0eb;
+  --fg-soft: #d6d1ca;
+  --muted: #9b958d;
+  --line: #262422;
+  --line-strong: #383532;
+  --accent: #e3907b;
+  --accent-soft: #3a231d;
+  --danger: #f2867e;
+  --success: #7cc4a0;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 8px 24px rgb(0 0 0 / 0.35);
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-fg: var(--fg);
+  --color-fg-soft: var(--fg-soft);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-danger: var(--danger);
+  --color-success: var(--success);
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif: var(--font-instrument-serif), ui-serif, Georgia, serif;
+  --shadow-soft: var(--shadow);
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--accent-soft);
+  color: var(--fg);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Native <dialog> as the modal primitive. */
+dialog {
+  color: inherit;
+}
+dialog::backdrop {
+  background: rgb(10 9 8 / 0.55);
+  backdrop-filter: blur(2px);
+}
+dialog[open] {
+  animation: dialog-in 220ms var(--ease-out-soft);
+}
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.985);
+  }
+}
+
+/* Photos fade in as they load rather than popping. */
+.photo-fade {
+  opacity: 0;
+  transition: opacity 500ms var(--ease-out-soft);
+}
+.photo-fade[data-loaded="true"] {
+  opacity: 1;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .photo-fade {
+    opacity: 1;
+  }
+}

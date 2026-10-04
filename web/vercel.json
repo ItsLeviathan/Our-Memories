@@ -1,0 +1,14 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "crons": [
+    {
+      "path": "/api/cron/monthly-recaps",
+      "schedule": "0 6 * * *"
+    }
+  ],
+  "functions": {
+    "src/app/api/memories/route.ts": {
+      "memory": 2048
+    }
+  }
+}
