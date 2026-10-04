@@ -10,7 +10,7 @@ export const OUT_H = 1080;
 export const FRAME_W = OUT_W * 2;
 export const FRAME_H = OUT_H * 2;
 
-const BG = "#0b0a09";
+const BG = "#120b20";
 const SANS = "Inter, 'Helvetica Neue', Arial, sans-serif";
 const SERIF = "'EB Garamond', 'Cormorant Garamond', Georgia, 'Times New Roman', serif";
 
@@ -71,8 +71,8 @@ async function textFrame(svgBody: string, output: string) {
 /** Opening card: "October 2026 — A month of us." */
 export function titleFrame(month: string, tagline: string, output: string) {
   return textFrame(
-    `<text x="50%" y="1020" text-anchor="middle" font-family="${SANS}" font-size="230" font-weight="600" letter-spacing="-7" fill="#f3f0eb">${escapeXml(month)}</text>
-     <text x="50%" y="1230" text-anchor="middle" font-family="${SERIF}" font-size="112" font-style="italic" fill="#cbc4ba">${escapeXml(tagline)}</text>`,
+    `<text x="50%" y="1020" text-anchor="middle" font-family="${SANS}" font-size="230" font-weight="600" letter-spacing="-7" fill="#f3eeff">${escapeXml(month)}</text>
+     <text x="50%" y="1230" text-anchor="middle" font-family="${SERIF}" font-size="112" font-style="italic" fill="#c9b5ff">${escapeXml(tagline)}</text>`,
     output,
   );
 }
@@ -83,13 +83,13 @@ export function endFrame(month: string, lines: string[], closing: string, output
   const statLines = lines
     .map(
       (line, i) =>
-        `<text x="50%" y="${startY + i * 140}" text-anchor="middle" font-family="${SANS}" font-size="96" font-weight="400" fill="#d6d1ca">${escapeXml(line)}</text>`,
+        `<text x="50%" y="${startY + i * 140}" text-anchor="middle" font-family="${SANS}" font-size="96" font-weight="400" fill="#d9cdf7">${escapeXml(line)}</text>`,
     )
     .join("");
   return textFrame(
-    `<text x="50%" y="${startY - 260}" text-anchor="middle" font-family="${SANS}" font-size="150" font-weight="600" letter-spacing="-4" fill="#f3f0eb">${escapeXml(month)}</text>
+    `<text x="50%" y="${startY - 260}" text-anchor="middle" font-family="${SANS}" font-size="150" font-weight="600" letter-spacing="-4" fill="#f3eeff">${escapeXml(month)}</text>
      ${statLines}
-     <text x="50%" y="${startY + lines.length * 140 + 150}" text-anchor="middle" font-family="${SERIF}" font-size="108" font-style="italic" fill="#cbc4ba">${escapeXml(closing)}</text>`,
+     <text x="50%" y="${startY + lines.length * 140 + 150}" text-anchor="middle" font-family="${SERIF}" font-size="108" font-style="italic" fill="#c9b5ff">${escapeXml(closing)}</text>`,
     output,
   );
 }

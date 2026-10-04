@@ -2,83 +2,93 @@
 
 /*
  * Our Memories — design tokens.
- * Soft blush + lavender: rosy accents, plum text, cotton-candy surfaces.
- * Photos still carry most of the color; the UI just feels warm and sweet.
+ * Lavender & violet: a deep violet accent, plum text, soft lilac surfaces,
+ * with orchid and periwinkle glows for depth. Text colors meet WCAG AA
+ * contrast on their backgrounds; photos still carry most of the color.
  */
 
 :root {
-  --bg: #fff5f8;
+  --bg: #f8f5ff;
   --surface: #ffffff;
-  --surface-2: #ffe8ef;
-  --fg: #4a2a3b;
-  --fg-soft: #6c4558;
-  --muted: #9b7385;
-  --line: #f9d9e3;
-  --line-strong: #f1bccd;
-  --accent: #d63a72;
-  --accent-soft: #ffe0eb;
-  --lavender: #b892ff;
+  --surface-2: #f1eaff;
+  --fg: #2a1d45;
+  --fg-soft: #483a68;
+  --muted: #6f6293;
+  --line: #e8dffb;
+  --line-strong: #d4c4f5;
+  --accent: #7c3aed;
+  --accent-soft: #efe6ff;
+  --lavender: #b46cf0;
   --on-accent: #ffffff;
-  --grad-from: #f2689b;
-  --grad-to: #d63a72;
-  --blob-1: rgb(255 182 206 / 0.55);
-  --blob-2: rgb(214 192 255 / 0.45);
-  --blob-3: rgb(255 214 196 / 0.4);
+  --grad-from: #7c3aed;
+  --grad-to: #5b21b6;
+  --glow: 109 40 217;
+  --blob-1: rgb(196 167 255 / 0.5);
+  --blob-2: rgb(240 171 252 / 0.32);
+  --blob-3: rgb(165 180 252 / 0.36);
+  --tape-1: rgb(196 167 255 / 0.8);
+  --tape-2: rgb(240 171 252 / 0.75);
   --danger: #c0283f;
   --success: #2f7d5b;
-  --overlay: rgb(30 12 22 / 0.96);
-  --shadow: 0 1px 2px rgb(214 58 114 / 0.06), 0 10px 30px rgb(214 58 114 / 0.1);
+  --overlay: rgb(16 9 30 / 0.97);
+  --shadow: 0 1px 2px rgb(var(--glow) / 0.06), 0 10px 30px rgb(var(--glow) / 0.1);
   color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #1b1118;
-    --surface: #251722;
-    --surface-2: #2f1e2b;
-    --fg: #fde9f1;
-    --fg-soft: #f1cfdc;
-    --muted: #b996a6;
-    --line: #3b2735;
-    --line-strong: #553a4c;
-    --accent: #ff8fb8;
-    --accent-soft: #4a2238;
-    --lavender: #c9adff;
-    --on-accent: #2a0f1e;
-    --grad-from: #ffa6c7;
-    --grad-to: #ff7aa9;
-    --blob-1: rgb(214 58 114 / 0.18);
-    --blob-2: rgb(150 110 230 / 0.16);
-    --blob-3: rgb(255 140 120 / 0.08);
+    --bg: #110b1f;
+    --surface: #1a1230;
+    --surface-2: #241a40;
+    --fg: #f3eeff;
+    --fg-soft: #d9cdf7;
+    --muted: #a597c9;
+    --line: #2e2350;
+    --line-strong: #44366f;
+    --accent: #b794ff;
+    --accent-soft: #2e2054;
+    --lavender: #e2a6ff;
+    --on-accent: #1a0b33;
+    --grad-from: #c6a8ff;
+    --grad-to: #9b6bff;
+    --glow: 155 107 255;
+    --blob-1: rgb(124 58 237 / 0.22);
+    --blob-2: rgb(192 38 211 / 0.12);
+    --blob-3: rgb(79 70 229 / 0.14);
+    --tape-1: rgb(155 107 255 / 0.55);
+    --tape-2: rgb(217 70 239 / 0.45);
     --danger: #ff8a94;
     --success: #86d4ae;
-    --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 10px 30px rgb(0 0 0 / 0.35);
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 10px 30px rgb(0 0 0 / 0.38);
     color-scheme: dark;
   }
 }
 
-/* The public album is always presented in a dreamy, night-sky theme. */
+/* The public album is always presented in a dreamy midnight-violet theme. */
 [data-theme="dark"] {
-  --bg: #170e16;
-  --surface: #221520;
-  --surface-2: #2c1c29;
-  --fg: #fdeaf2;
-  --fg-soft: #f1cfdc;
-  --muted: #b996a6;
-  --line: #352331;
-  --line-strong: #4e3546;
-  --accent: #ff8fb8;
-  --accent-soft: #4a2238;
-  --lavender: #c9adff;
-  --on-accent: #2a0f1e;
-  --grad-from: #ffa6c7;
-  --grad-to: #ff7aa9;
-  --blob-1: rgb(214 58 114 / 0.2);
-  --blob-2: rgb(150 110 230 / 0.18);
-  --blob-3: rgb(255 140 120 / 0.08);
+  --bg: #0e0919;
+  --surface: #18112c;
+  --surface-2: #22183c;
+  --fg: #f3eeff;
+  --fg-soft: #d9cdf7;
+  --muted: #a597c9;
+  --line: #2b2049;
+  --line-strong: #41336a;
+  --accent: #b794ff;
+  --accent-soft: #2e2054;
+  --lavender: #e2a6ff;
+  --on-accent: #1a0b33;
+  --grad-from: #c6a8ff;
+  --grad-to: #9b6bff;
+  --glow: 155 107 255;
+  --blob-1: rgb(124 58 237 / 0.24);
+  --blob-2: rgb(192 38 211 / 0.13);
+  --blob-3: rgb(79 70 229 / 0.15);
+  --tape-1: rgb(155 107 255 / 0.55);
+  --tape-2: rgb(217 70 239 / 0.45);
   --danger: #ff8a94;
   --success: #86d4ae;
-  --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 10px 30px rgb(0 0 0 / 0.35);
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 10px 30px rgb(0 0 0 / 0.38);
   color-scheme: dark;
 }
 
@@ -151,15 +161,15 @@ h3,
   color: transparent;
 }
 
-/* Rosy gradient fill for primary actions. */
+/* Violet gradient fill for primary actions. */
 .btn-primary {
   background-image: linear-gradient(135deg, var(--grad-from), var(--grad-to));
   color: var(--on-accent);
-  box-shadow: 0 6px 18px -6px rgb(214 58 114 / 0.55), inset 0 1px 0 rgb(255 255 255 / 0.25);
+  box-shadow: 0 6px 18px -6px rgb(var(--glow) / 0.55), inset 0 1px 0 rgb(255 255 255 / 0.25);
 }
 .btn-primary:hover {
   filter: brightness(1.05) saturate(1.05);
-  box-shadow: 0 10px 24px -8px rgb(214 58 114 / 0.65), inset 0 1px 0 rgb(255 255 255 / 0.25);
+  box-shadow: 0 10px 24px -8px rgb(var(--glow) / 0.65), inset 0 1px 0 rgb(255 255 255 / 0.25);
   transform: translateY(-1px);
 }
 
@@ -182,7 +192,7 @@ h3,
 .polaroid-item:hover .polaroid,
 .polaroid-item:focus-visible .polaroid {
   transform: rotate(0deg) translateY(-4px) scale(1.01);
-  box-shadow: 0 2px 4px rgb(214 58 114 / 0.08), 0 18px 40px rgb(214 58 114 / 0.18);
+  box-shadow: 0 2px 4px rgb(var(--glow) / 0.08), 0 18px 40px rgb(var(--glow) / 0.2);
 }
 
 /* Little washi-tape strip on top of a polaroid. */
@@ -193,7 +203,7 @@ h3,
   width: 5.5rem;
   height: 1.4rem;
   transform: translateX(-50%) rotate(-3deg);
-  background: linear-gradient(90deg, rgb(255 182 206 / 0.75), rgb(214 192 255 / 0.75));
+  background: linear-gradient(90deg, var(--tape-1), var(--tape-2));
   border-radius: 3px;
   box-shadow: 0 1px 2px rgb(0 0 0 / 0.06);
   z-index: 1;
@@ -287,7 +297,7 @@ dialog {
   color: inherit;
 }
 dialog::backdrop {
-  background: rgb(60 20 42 / 0.45);
+  background: rgb(28 14 58 / 0.5);
   backdrop-filter: blur(4px);
 }
 dialog[open] {

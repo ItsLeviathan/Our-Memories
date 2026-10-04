@@ -42,7 +42,7 @@ export function MonthCard({ month }: { month: MonthSummary }) {
 
 function Badge({ icon, children }: { icon: "play" | "link"; children: React.ReactNode }) {
   return (
-    <span className="inline-flex items-center gap-1 rounded-full bg-white/85 px-2.5 py-1 text-xs font-bold text-[#d63a72] shadow-sm backdrop-blur-md">
+    <span className="inline-flex items-center gap-1 rounded-full bg-white/85 px-2.5 py-1 text-xs font-bold text-[#6d28d9] shadow-sm backdrop-blur-md">
       <Icon name={icon} size={12} filled={icon === "play"} />
       {children}
     </span>
