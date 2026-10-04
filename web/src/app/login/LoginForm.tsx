@@ -53,7 +53,7 @@ export function LoginForm({ next, notice }: { next: string; notice: string | nul
         </p>
       ) : null}
       <Button type="submit" size="lg" className="w-full" loading={pending}>
-        Sign in
+        Come on in ♡
       </Button>
     </form>
   );

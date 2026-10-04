@@ -203,7 +203,7 @@ function Tile({
     <button
       type="button"
       onClick={onOpen}
-      className="group relative shrink-0 overflow-hidden rounded-[3px] bg-surface-2 sm:rounded-md"
+      className="group relative shrink-0 overflow-hidden rounded-lg bg-surface-2 sm:rounded-2xl"
       style={{ width, height }}
       aria-label={`Open photo: ${label}`}
     >

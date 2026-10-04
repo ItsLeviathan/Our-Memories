@@ -161,8 +161,8 @@ export function ShareButton({ monthKey, initial, disabled }: { monthKey: string;
                     type="button"
                     onClick={() => setExpiry(value)}
                     aria-pressed={expiry === value}
-                    className={`h-11 rounded-xl border text-sm font-medium transition-colors ${
-                      expiry === value ? "border-fg bg-fg text-bg" : "border-line text-fg-soft hover:border-line-strong"
+                    className={`h-11 rounded-2xl border-2 text-sm font-bold transition-colors ${
+                      expiry === value ? "btn-primary border-transparent" : "border-line text-fg-soft hover:border-line-strong"
                     }`}
                   >
                     {value === null ? "Never" : `${value} days`}

@@ -6,14 +6,14 @@ type Variant = "primary" | "secondary" | "ghost" | "danger";
 type Size = "md" | "lg" | "icon";
 
 const base =
-  "inline-flex items-center justify-center gap-2 rounded-full font-medium whitespace-nowrap select-none " +
-  "transition-[background-color,color,border-color,transform,opacity] duration-200 ease-out-soft " +
+  "inline-flex items-center justify-center gap-2 rounded-full font-bold whitespace-nowrap select-none " +
+  "transition-[background-color,color,border-color,transform,opacity,box-shadow,filter] duration-200 ease-out-soft " +
   "active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50";
 
 const variants: Record<Variant, string> = {
-  primary: "bg-fg text-bg hover:bg-fg-soft",
-  secondary: "border border-line-strong text-fg hover:border-fg/40 hover:bg-surface-2/60",
-  ghost: "text-fg-soft hover:bg-surface-2 hover:text-fg",
+  primary: "btn-primary",
+  secondary: "border-2 border-line-strong bg-surface/70 text-accent hover:border-accent/50 hover:bg-accent-soft",
+  ghost: "text-fg-soft hover:bg-accent-soft hover:text-accent",
   danger: "bg-danger text-white hover:opacity-90",
 };
 

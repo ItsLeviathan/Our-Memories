@@ -39,14 +39,16 @@ export default async function SharedAlbumPage({ params }: PageProps<"/m/[token]"
   const name = monthName(share.monthKey);
 
   return (
-    <div data-theme="dark" className="min-h-dvh bg-bg text-fg">
+    <div data-theme="dark" className="min-h-dvh text-fg">
       <DarkDocument />
       <header className="relative flex min-h-[78dvh] flex-col items-center justify-center px-6 text-center sm:min-h-[86dvh]">
-        <p className="text-sm font-medium uppercase tracking-[0.22em] text-muted">A shared album</p>
-        <h1 className="mt-5 text-[3.4rem] font-semibold leading-[0.98] tracking-[-0.04em] sm:text-8xl lg:text-[8.5rem]">
+        <p className="inline-flex items-center gap-1.5 rounded-full bg-accent-soft px-4 py-1.5 text-sm font-bold text-accent">
+          <Icon name="heart" size={14} filled className="animate-heartbeat" /> A shared album
+        </p>
+        <h1 className="text-gradient mt-6 pb-2 text-[3.4rem] font-semibold leading-[1.02] sm:text-8xl lg:text-[8.5rem]">
           {monthLabel(share.monthKey)}
         </h1>
-        <p className="mt-6 font-serif text-2xl italic text-fg-soft sm:text-3xl">A month of us.</p>
+        <p className="mt-5 font-serif text-3xl sm:text-4xl">A month of us ♡</p>
         {stats.memoryCount ? (
           <p className="mt-8 text-[0.95rem] text-muted">
             {pluralize(stats.memoryCount, "memory", "memories")} · {pluralize(stats.dayCount, "day")}
@@ -54,7 +56,7 @@ export default async function SharedAlbumPage({ params }: PageProps<"/m/[token]"
         ) : null}
         <a
           href="#album"
-          className="absolute bottom-8 grid h-12 w-12 place-items-center rounded-full text-muted transition-colors hover:text-fg"
+          className="absolute bottom-8 grid h-12 w-12 animate-bounce place-items-center rounded-full bg-accent-soft text-accent motion-reduce:animate-none"
           aria-label="Scroll to photos"
         >
           <Icon name="arrowDown" size={22} />
@@ -65,16 +67,16 @@ export default async function SharedAlbumPage({ params }: PageProps<"/m/[token]"
         {page.items.length ? (
           <Gallery initial={page} mode={{ kind: "public", token, allowDownloads: share.allowDownloads }} />
         ) : (
-          <p className="py-24 text-center font-serif text-2xl italic text-muted">Nothing here yet.</p>
+          <p className="py-24 text-center font-serif text-3xl">Nothing here yet ♡</p>
         )}
 
         {recap.videoUrl ? (
           <section aria-labelledby="recap-title" className="mx-auto mt-28 max-w-5xl px-3 sm:mt-40 sm:px-0">
             <div className="mb-8 text-center">
-              <h2 id="recap-title" className="text-4xl font-semibold tracking-[-0.03em] sm:text-5xl">
+              <h2 id="recap-title" className="text-gradient pb-1 text-4xl font-semibold sm:text-5xl">
                 {name} Recap
               </h2>
-              <p className="mt-3 font-serif text-xl italic text-muted">The month, in a few minutes.</p>
+              <p className="mt-2 font-serif text-2xl">The month, in a few sweet minutes ♡</p>
             </div>
             <RecapPlayer src={recap.videoUrl} poster={recap.posterUrl} title={`${name} recap`} />
             {share.allowDownloads ? (
@@ -88,20 +90,22 @@ export default async function SharedAlbumPage({ params }: PageProps<"/m/[token]"
         ) : null}
       </main>
 
-      <footer className="pb-12 text-center text-sm tracking-tight text-muted/70">Our Memories</footer>
+      <footer className="flex items-center justify-center gap-1.5 pb-12 text-sm text-muted/80">
+        Made with <Icon name="heart" size={14} filled className="text-accent" /> · Our Memories
+      </footer>
     </div>
   );
 }
 
 function Unavailable({ rateLimited }: { rateLimited: boolean }) {
   return (
-    <main data-theme="dark" className="grid min-h-dvh place-items-center bg-bg px-6 text-center text-fg">
+    <main data-theme="dark" className="grid min-h-dvh place-items-center px-6 text-center text-fg">
       <DarkDocument />
       <div className="max-w-md">
-        <h1 className="text-4xl font-semibold tracking-[-0.03em] sm:text-5xl">
+        <h1 className="text-4xl font-semibold sm:text-5xl">
           {rateLimited ? "Please wait a moment." : "This album isn't available."}
         </h1>
-        <p className="mt-4 font-serif text-xl italic text-muted">
+        <p className="mt-4 font-serif text-2xl">
           {rateLimited ? "Too many requests — try again in a few minutes." : "The link may have expired or been turned off."}
         </p>
       </div>

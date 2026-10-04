@@ -1,15 +1,12 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Instrument_Serif } from "next/font/google";
+import { Dancing_Script, Fredoka, Nunito } from "next/font/google";
+import { FloatingHearts } from "@/components/ui/FloatingHearts";
 import { MotionProvider } from "@/components/ui/MotionProvider";
 import "./globals.css";
 
-const geist = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
-const instrumentSerif = Instrument_Serif({
-  variable: "--font-instrument-serif",
-  subsets: ["latin"],
-  weight: "400",
-  style: ["normal", "italic"],
-});
+const nunito = Nunito({ variable: "--font-nunito", subsets: ["latin"] });
+const fredoka = Fredoka({ variable: "--font-fredoka", subsets: ["latin"] });
+const dancingScript = Dancing_Script({ variable: "--font-dancing-script", subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: { default: "Our Memories", template: "%s · Our Memories" },
@@ -22,15 +19,16 @@ export const viewport: Viewport = {
   initialScale: 1,
   viewportFit: "cover",
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f8f6f2" },
-    { media: "(prefers-color-scheme: dark)", color: "#0d0c0b" },
+    { media: "(prefers-color-scheme: light)", color: "#fff5f8" },
+    { media: "(prefers-color-scheme: dark)", color: "#1b1118" },
   ],
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${geist.variable} ${instrumentSerif.variable}`}>
+    <html lang="en" className={`${nunito.variable} ${fredoka.variable} ${dancingScript.variable}`}>
       <body className="min-h-dvh">
+        <FloatingHearts />
         <MotionProvider>{children}</MotionProvider>
       </body>
     </html>

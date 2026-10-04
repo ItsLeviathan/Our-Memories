@@ -34,13 +34,13 @@ export default async function MonthPage({ params }: PageProps<"/months/[month]">
 
   return (
     <div>
-      <Link href="/" className="inline-flex items-center gap-1.5 text-sm text-muted transition-colors hover:text-fg">
+      <Link href="/" className="inline-flex min-h-11 items-center gap-1.5 rounded-full bg-surface/70 px-4 py-1.5 text-sm font-bold sm:min-h-0 text-muted transition-colors hover:bg-accent-soft hover:text-accent">
         <Icon name="arrowLeft" size={16} /> All months
       </Link>
 
       <header className="mt-6 flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <h1 className="text-5xl font-semibold leading-[1.02] tracking-[-0.035em] sm:text-6xl xl:text-7xl">{monthLabel(monthKey)}</h1>
+          <h1 className="text-gradient pb-1 text-5xl font-semibold leading-[1.05] sm:text-6xl xl:text-7xl">{monthLabel(monthKey)}</h1>
           {empty ? (
             <p className="mt-4 text-lg text-fg-soft">Nothing here yet.</p>
           ) : (
@@ -72,7 +72,7 @@ export default async function MonthPage({ params }: PageProps<"/months/[month]">
       {empty ? (
         <section className="grid min-h-[40dvh] place-items-center text-center">
           <div>
-            <p className="font-serif text-2xl italic text-muted">Maybe this month is just getting started.</p>
+            <p className="font-serif text-3xl">Maybe this month is just getting started ♡</p>
             <ButtonLink href={`/add?month=${monthKey}`} variant="secondary" icon="plus" className="mt-8">
               Add a memory
             </ButtonLink>
@@ -83,7 +83,7 @@ export default async function MonthPage({ params }: PageProps<"/months/[month]">
           <div className="mt-12 sm:mt-16">
             <Gallery key={monthKey} initial={page} mode={{ kind: "private", monthKey }} />
           </div>
-          <div className="mt-20 border-t border-line pt-12 sm:mt-28 sm:pt-16">
+          <div className="mt-20 border-t-2 border-dashed border-line pt-12 sm:mt-28 sm:pt-16">
             <RecapPanel monthKey={monthKey} initial={recap} memoryCount={stats.memoryCount} />
           </div>
         </>

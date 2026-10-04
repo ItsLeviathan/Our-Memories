@@ -1,13 +1,13 @@
 import type { ComponentProps, ReactNode } from "react";
 
 export const inputClasses =
-  "w-full rounded-xl border border-line bg-surface px-4 py-3 text-base text-fg placeholder:text-muted/70 " +
-  "transition-colors focus:border-fg/40 focus:outline-none focus-visible:outline-none";
+  "w-full rounded-2xl border-2 border-line bg-surface px-4 py-3 text-base text-fg placeholder:text-muted/70 " +
+  "transition-[border-color,box-shadow] focus:border-accent/60 focus:shadow-[0_0_0_4px_var(--accent-soft)] focus:outline-none focus-visible:outline-none";
 
 export function Field({ label, hint, children }: { label: string; hint?: ReactNode; children: ReactNode }) {
   return (
     <label className="block">
-      <span className="mb-1.5 flex items-baseline justify-between gap-3 text-sm font-medium text-fg-soft">
+      <span className="mb-1.5 flex items-baseline justify-between gap-3 text-sm font-bold text-fg-soft">
         {label}
         {hint ? <span className="text-xs font-normal text-muted">{hint}</span> : null}
       </span>
@@ -44,7 +44,7 @@ export function Toggle({
       role="switch"
       aria-checked={checked}
       onClick={() => onChange(!checked)}
-      className="flex w-full items-center justify-between gap-4 rounded-xl border border-line bg-surface px-4 py-3 text-left transition-colors hover:border-line-strong"
+      className="flex w-full items-center justify-between gap-4 rounded-2xl border-2 border-line bg-surface px-4 py-3 text-left transition-colors hover:border-line-strong"
     >
       <span className="flex items-center gap-3">
         {icon}
@@ -54,11 +54,11 @@ export function Toggle({
         </span>
       </span>
       <span
-        className={`relative h-6 w-10 shrink-0 rounded-full transition-colors ${checked ? "bg-fg" : "bg-line-strong"}`}
+        className={`relative h-6 w-10 shrink-0 rounded-full transition-colors ${checked ? "bg-accent" : "bg-line-strong"}`}
         aria-hidden="true"
       >
         <span
-          className={`absolute top-0.5 h-5 w-5 rounded-full bg-bg shadow-sm transition-transform duration-200 ${
+          className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-transform duration-200 ${
             checked ? "translate-x-[18px]" : "translate-x-0.5"
           }`}
         />

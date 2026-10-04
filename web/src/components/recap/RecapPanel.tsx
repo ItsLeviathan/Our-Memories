@@ -117,7 +117,7 @@ export function RecapPanel({ monthKey, initial, memoryCount }: { monthKey: strin
     <section id="recap" aria-labelledby="recap-title" className="scroll-mt-24">
       <div className="mb-5 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h2 id="recap-title" className="text-2xl font-semibold tracking-tight sm:text-3xl">
+          <h2 id="recap-title" className="text-2xl font-semibold sm:text-3xl">
             {name} recap
           </h2>
           <p className="mt-1 text-muted" aria-live="polite">

@@ -19,8 +19,8 @@ export default async function AddPage({ searchParams }: PageProps<"/add">) {
   return (
     <div>
       <header className="mb-10 sm:mb-14">
-        <h1 className="text-4xl font-semibold tracking-[-0.03em] sm:text-5xl">Add to our memories</h1>
-        <p className="mt-3 font-serif text-xl italic text-muted">A few photos from your day.</p>
+        <h1 className="text-gradient pb-1 text-4xl font-semibold sm:text-5xl">Add to our memories</h1>
+        <p className="mt-2 font-serif text-2xl sm:text-3xl">A few sweet photos from your day ♡</p>
       </header>
       <Uploader defaultDay={defaultDay} maxMb={UPLOAD_MAX_MB} />
     </div>

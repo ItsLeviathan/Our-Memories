@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Icon } from "@/components/ui/Icon";
 import { LoginForm } from "./LoginForm";
 
 export const metadata: Metadata = { title: "Sign in" };
@@ -10,10 +11,13 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
 
   return (
     <main className="grid min-h-dvh place-items-center px-5 py-16">
-      <div className="w-full max-w-sm">
-        <div className="mb-10 text-center">
-          <h1 className="text-4xl font-semibold tracking-[-0.03em] sm:text-5xl">Our Memories</h1>
-          <p className="mt-3 font-serif text-xl italic text-muted">A private place for the two of us.</p>
+      <div className="w-full max-w-sm rounded-[2.5rem] border-2 border-line bg-surface/85 p-7 shadow-soft backdrop-blur-sm sm:p-9">
+        <div className="mb-8 text-center">
+          <span className="mx-auto mb-5 grid h-16 w-16 place-items-center rounded-full bg-accent-soft text-accent shadow-soft">
+            <Icon name="heart" size={30} filled className="animate-heartbeat" />
+          </span>
+          <h1 className="text-gradient pb-1 text-4xl font-semibold sm:text-5xl">Our Memories</h1>
+          <p className="mt-2 font-serif text-2xl">A little place for the two of us ♡</p>
         </div>
         <LoginForm next={next} notice={notice} />
       </div>

@@ -34,7 +34,7 @@ export function RecapPlayer({ src, poster, title }: { src: string; poster: strin
           className="group absolute inset-0 grid place-items-center bg-black/15 transition-colors hover:bg-black/25"
           aria-label={`Play ${title}`}
         >
-          <span className="grid h-18 w-18 place-items-center rounded-full bg-white/90 text-black shadow-lg transition-transform duration-300 ease-out-soft group-hover:scale-105 sm:h-20 sm:w-20">
+          <span className="grid h-18 w-18 place-items-center rounded-full bg-white/90 text-[#d63a72] shadow-lg transition-transform duration-300 ease-out-soft group-hover:scale-105 sm:h-20 sm:w-20">
             <Icon name="play" filled size={28} className="translate-x-[2px]" />
           </span>
         </button>

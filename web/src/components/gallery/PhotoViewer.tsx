@@ -136,7 +136,7 @@ export function PhotoViewer({
           <motion.div
             key={item.id}
             custom={direction}
-            className="absolute inset-0 flex items-center justify-center px-0 py-16 sm:px-20 sm:py-20"
+            className="absolute inset-0 flex items-center justify-center px-0 py-16 sm:px-20 sm:py-20 [@media(max-height:560px)]:px-16 [@media(max-height:560px)]:py-2"
             initial={{ opacity: 0, x: direction * 60 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: direction * -60 }}

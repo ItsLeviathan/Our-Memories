@@ -7,8 +7,9 @@ export default function ErrorPage({ reset }: { error: Error & { digest?: string 
   return (
     <main className="grid min-h-[70dvh] place-items-center px-6 text-center">
       <div className="max-w-md">
-        <h1 className="text-3xl font-semibold tracking-[-0.03em] sm:text-4xl">Something went wrong.</h1>
-        <p className="mt-3 text-muted">It&apos;s not you. Please try again in a moment.</p>
+        <p className="text-6xl" aria-hidden="true">🙈</p>
+        <h1 className="mt-4 text-3xl font-semibold sm:text-4xl">Oopsie, something went wrong</h1>
+        <p className="mt-3 font-serif text-2xl">It&apos;s not you ♡ Please try again in a moment.</p>
         <Button className="mt-8" onClick={reset} icon="retry">
           Try again
         </Button>

@@ -225,15 +225,15 @@ export function Uploader({ defaultDay, maxMb }: { defaultDay: string; maxMb: num
         }}
         onDragLeave={() => setDragging(false)}
         onDrop={onDrop}
-        className={`relative flex min-h-[52vh] flex-col items-center justify-center rounded-[2rem] border border-dashed px-6 py-16 text-center transition-colors duration-300 ${
-          dragging ? "border-fg/50 bg-surface-2" : "border-line-strong bg-surface/60"
+        className={`relative flex min-h-[52vh] flex-col items-center justify-center rounded-[2.5rem] border-[3px] border-dashed px-6 py-16 text-center transition-colors duration-300 ${
+          dragging ? "scale-[1.01] border-accent/60 bg-accent-soft" : "border-line-strong bg-surface/60"
         }`}
       >
         {fileInput}
-        <span className="mb-6 grid h-16 w-16 place-items-center rounded-full bg-surface-2 text-fg-soft">
-          <Icon name="image" size={28} />
+        <span className="mb-6 grid h-20 w-20 place-items-center rounded-full bg-accent-soft text-accent shadow-soft">
+          <Icon name="image" size={34} className={dragging ? "animate-bounce" : ""} />
         </span>
-        <p className="text-2xl font-semibold tracking-tight sm:text-3xl">Drop photos here</p>
+        <p className="font-display text-2xl font-semibold text-accent sm:text-3xl">Drop your cute photos here ♡</p>
         <p className="mt-2 text-muted">or</p>
         <Button size="lg" className="mt-4" onClick={() => inputRef.current?.click()}>
           Choose from your device
@@ -259,7 +259,7 @@ export function Uploader({ defaultDay, maxMb }: { defaultDay: string; maxMb: num
       <section aria-label="Selected photos">
         <div className="mb-5 flex items-end justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-semibold tracking-tight">{pluralize(counts.total, "photo")} selected</h2>
+            <h2 className="text-2xl font-semibold">{pluralize(counts.total, "photo")} selected</h2>
             <p className="mt-1 text-sm text-muted" aria-live="polite">
               {running
                 ? `Adding ${counts.done + counts.duplicate} of ${uploadable}…`
@@ -276,8 +276,8 @@ export function Uploader({ defaultDay, maxMb }: { defaultDay: string; maxMb: num
         </div>
 
         {running || finished ? (
-          <div className="mb-5 h-1 overflow-hidden rounded-full bg-line" role="progressbar" aria-valuenow={Math.round(overall * 100)} aria-valuemin={0} aria-valuemax={100}>
-            <div className="h-full rounded-full bg-fg transition-[width] duration-500" style={{ width: `${Math.max(2, overall * 100)}%` }} />
+          <div className="mb-5 h-2.5 overflow-hidden rounded-full bg-accent-soft" role="progressbar" aria-valuenow={Math.round(overall * 100)} aria-valuemin={0} aria-valuemax={100}>
+            <div className="h-full rounded-full bg-gradient-to-r from-[var(--grad-from)] to-[var(--lavender)] transition-[width] duration-500" style={{ width: `${Math.max(2, overall * 100)}%` }} />
           </div>
         ) : null}
 
@@ -300,11 +300,11 @@ export function Uploader({ defaultDay, maxMb }: { defaultDay: string; maxMb: num
 
       <aside className="lg:sticky lg:top-24 lg:self-start">
         {finished ? (
-          <div className="rounded-3xl border border-line bg-surface p-6 sm:p-7">
+          <div className="rounded-[2rem] border-2 border-line bg-surface shadow-soft p-6 sm:p-7">
             <span className="grid h-12 w-12 place-items-center rounded-full bg-accent-soft text-accent">
               <Icon name="check" size={24} />
             </span>
-            <h3 className="mt-5 text-xl font-semibold tracking-tight">
+            <h3 className="mt-5 text-xl font-semibold">
               {counts.done ? "Added to your memories" : "Nothing new to add"}
             </h3>
             <p className="mt-1.5 text-muted">
@@ -454,7 +454,7 @@ function Thumb({ entry, canRemove, onRemove }: { entry: Entry; canRemove: boolea
         <button
           type="button"
           onClick={onRemove}
-          className="absolute right-1.5 top-1.5 grid h-8 w-8 place-items-center rounded-full bg-black/50 text-white opacity-100 backdrop-blur-sm transition-opacity hover:bg-black/70 sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
+          className="absolute right-1.5 top-1.5 grid h-10 w-10 place-items-center sm:h-8 sm:w-8 rounded-full bg-black/50 text-white opacity-100 backdrop-blur-sm transition-opacity hover:bg-black/70 sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
           aria-label={`Remove ${entry.file.name}`}
         >
           <Icon name="close" size={16} />
