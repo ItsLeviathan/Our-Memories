@@ -170,7 +170,7 @@ h3,
 .marquee {
   display: flex;
   flex-direction: column;
-  gap: 1.75rem;
+  gap: 1.5rem;
   margin-inline: calc(50% - 50vw);
   overflow: hidden;
   padding-block: 1.25rem 2.25rem;
@@ -199,7 +199,7 @@ h3,
  * bottom. Everything scales from --h, the height of the image window.
  */
 .instax {
-  --h: 10.5rem;
+  --h: 9rem;
   display: block;
   cursor: zoom-in;
   text-align: inherit;
@@ -217,17 +217,54 @@ h3,
     0 6px 14px -4px rgb(var(--glow) / 0.18),
     0 18px 32px -14px rgb(var(--glow) / 0.28),
     inset 0 0 0 1px rgb(0 0 0 / 0.035);
-  transform: rotate(-1.6deg);
+  /* Each print's own tilt and height offset come from the photo (see MonthShowcase). */
+  transform: rotate(var(--tilt, -1.5deg)) translateY(calc(var(--h) * 0.03 * var(--lift, 0)));
   transition: transform 450ms var(--ease-out-soft), box-shadow 450ms var(--ease-out-soft);
+}
+/* A strip of washi tape holding the print up. */
+.instax[data-deco="tape"]::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  top: calc(var(--h) * -0.07);
+  left: 50%;
+  width: calc(var(--h) * 0.42);
+  height: calc(var(--h) * 0.13);
+  transform: translateX(-50%) rotate(calc(var(--tilt, 0deg) * -1.5 - 3deg));
+  background: linear-gradient(90deg, var(--tape-1), var(--tape-2));
+  border-radius: 2px;
+  opacity: 0.9;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.08);
+}
+/* Puffy sticker on the corner of a print. */
+.instax-sticker {
+  position: absolute;
+  z-index: 1;
+  top: calc(var(--h) * -0.06);
+  right: calc(var(--h) * -0.06);
+  display: grid;
+  place-items: center;
+  width: calc(var(--h) * 0.2);
+  height: calc(var(--h) * 0.2);
+  border-radius: 999px;
+  background: #fff;
+  color: #ec4899;
+  box-shadow: 0 2px 6px rgb(var(--glow) / 0.3);
+  transform: rotate(12deg);
+}
+.instax-sticker[data-kind="star"] {
+  color: #f5b301;
+  transform: rotate(-10deg);
+}
+.instax-sticker svg {
+  width: 62%;
+  height: 62%;
 }
 .instax[data-film="square"] {
   --w: var(--h);
 }
 .instax[data-film="wide"] {
   --w: calc(var(--h) * 1.597);
-}
-.instax:nth-child(even) {
-  transform: rotate(1.4deg) translateY(calc(var(--h) * 0.06));
 }
 .instax:hover,
 .instax:focus-visible {
@@ -311,12 +348,12 @@ h3,
 }
 @media (min-width: 640px) {
   .instax {
-    --h: 12rem;
+    --h: 10.5rem;
   }
 }
 @media (min-width: 1280px) {
   .instax {
-    --h: 13rem;
+    --h: 11.5rem;
   }
 }
 

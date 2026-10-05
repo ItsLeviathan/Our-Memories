@@ -1,17 +1,28 @@
 import Link from "next/link";
 import { ButtonLink } from "@/components/ui/Button";
+import { CoupleMark } from "@/components/ui/CoupleMark";
 import { Icon } from "@/components/ui/Icon";
 
-/** `displayName` is null for signed-out visitors, who get a sign-in button instead. */
-export function SiteHeader({ displayName }: { displayName: string | null }) {
+/**
+ * `displayName` is null for signed-out visitors, who get a sign-in button instead.
+ * `names` are the two of us, written under the wordmark.
+ */
+export function SiteHeader({ displayName, names }: { displayName: string | null; names: string[] }) {
   return (
     <header className="sticky top-0 z-30 border-b-2 border-line/70 bg-bg/80 backdrop-blur-md supports-[backdrop-filter]:bg-bg/65">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-10">
-        <Link href="/" className="hover-wiggle flex items-center gap-2 font-display text-xl font-semibold">
-          <span className="wiggle-target grid h-9 w-9 place-items-center rounded-full bg-accent-soft text-accent">
-            <Icon name="heart" filled size={18} className="animate-heartbeat" />
+        <Link href="/" className="hover-wiggle flex min-w-0 items-center gap-2.5" aria-label="Our Memories — home">
+          <span className="wiggle-target grid h-11 w-11 shrink-0 place-items-center rounded-full bg-accent-soft shadow-soft">
+            <CoupleMark size={30} className="animate-heartbeat" />
           </span>
-          <span className="text-gradient">Our Memories</span>
+          <span className="flex min-w-0 flex-col leading-none">
+            <span className="text-gradient font-display text-xl font-semibold">Our Memories</span>
+            {names.length === 2 ? (
+              <span className="mt-0.5 truncate font-serif text-[1.05rem] leading-tight">
+                {names[0]} <span className="text-lavender">&amp;</span> {names[1]}
+              </span>
+            ) : null}
+          </span>
         </Link>
         {displayName === null ? (
           <ButtonLink href="/login" variant="secondary" icon="heart">
