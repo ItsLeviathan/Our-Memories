@@ -5,18 +5,23 @@ import { AnimatePresence } from "motion/react";
 import { PhotoViewer } from "@/components/gallery/PhotoViewer";
 import type { GalleryItem } from "@/lib/types";
 
-/** Seconds each print spends crossing a row; keeps the pace steady whatever the count. */
-const SECONDS_PER_PHOTO = 7;
-/** Always a few rows so the month reads as a cute wall of prints, more for big months. */
-const MIN_ROWS = 3;
+/** Drift speed: seconds to travel one print height. Width-based, so pace is steady. */
+const SECONDS_PER_HEIGHT = 6;
 const MAX_ROWS = 5;
-const PHOTOS_PER_ROW = 8;
-/** Up to this many photos, every row shows every photo (in a different order). */
-const ALL_IN_EACH_ROW = 15;
-/** Repeat short rows so each one is always wider than the screen. */
-const MIN_PER_LOOP = 8;
+/** Rows are added as the month fills up, about one per this many photos. */
+const PHOTOS_PER_ROW = 3;
+/** Rows shorter than this get two fillers per photo so the photos repeat less. */
+const SHORT_ROW = 5;
+/**
+ * A row's loop must be at least this wide (in print heights) to cover a wide
+ * screen; short rows repeat only as often as needed to reach it.
+ */
+const MIN_LOOP_WIDTH = 15;
 /** Each row drifts at a slightly different pace so they never line up. */
 const ROW_PACE = [1, 1.22, 0.88, 1.12, 0.95];
+
+/** Sweet words on the little sticky notes tucked between prints. */
+const NOTES = ["us ♡", "my fave", "hehe", "forever", "more of this", "my person", "love u", "always", "ours", "best day"];
 
 const dayFormat = new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", timeZone: "UTC" });
 
@@ -30,7 +35,7 @@ function filmFor(item: GalleryItem): Film {
   return "wide";
 }
 
-/** Small stable number from a photo's id, so its tilt and stickers never change. */
+/** Small stable number from an id, so a print's tilt and stickers never change. */
 function seed(id: string) {
   let h = 0;
   for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) >>> 0;
@@ -46,34 +51,67 @@ function looksFor(item: GalleryItem) {
 }
 
 /**
- * Splits the month into rows. Small months: every row holds every photo, each
- * starting from a different one so the same photo never stacks up in a column.
- * Big months: photos are dealt round-robin so each row spans the whole month.
+ * Rows grow with the month (1 row for a couple of photos, 2 from 3 photos, 3 from
+ * 9, up to 5), so each row has enough different photos not to look repetitive.
  */
+function rowCount(n: number) {
+  if (n <= 2) return 1;
+  return Math.min(MAX_ROWS, Math.max(2, Math.floor(n / PHOTOS_PER_ROW)));
+}
+
+/** Deals the photos round-robin into rows: every photo appears in exactly one row. */
 function toRows(items: GalleryItem[]) {
-  const n = items.length;
-  const count = Math.min(n, Math.max(MIN_ROWS, Math.min(MAX_ROWS, Math.ceil(n / PHOTOS_PER_ROW))));
-  if (n <= ALL_IN_EACH_ROW) {
-    return Array.from({ length: count }, (_, r) => {
-      const start = Math.round((r * n) / count);
-      return [...items.slice(start), ...items.slice(0, start)];
-    });
-  }
-  const rows: GalleryItem[][] = Array.from({ length: count }, () => []);
-  items.forEach((item, i) => rows[i % count].push(item));
+  const rows: GalleryItem[][] = Array.from({ length: rowCount(items.length) }, () => []);
+  items.forEach((item, i) => rows[i % rows.length].push(item));
   return rows;
 }
 
+/** Approximate on-screen widths, in print heights (window + borders + gap). */
+const FILM_WIDTH: Record<Film, number> = { mini: 0.742, square: 1, wide: 1.597 };
+const PRINT_EXTRA = 0.34;
+const NOTE_WIDTH = 0.95;
+const DOODLE_WIDTH = 0.7;
+
+type Slot =
+  | { kind: "photo"; item: GalleryItem }
+  | { kind: "note"; text: string; key: string }
+  | { kind: "doodle"; shape: "heart" | "sparkle"; key: string };
+
 /**
- * The whole month as rows of Instax prints drifting right to left. Each row's
- * track holds its prints twice and slides by half its width, so the loop is
- * seamless. Hovering pauses everything; with reduced motion the rows become
- * strips you scroll by hand. Clicking a print opens it in the photo viewer.
+ * A row's photos, each followed by a little note and/or doodle so the photos
+ * need fewer repeats to fill the screen. Returns how often the row must repeat.
+ */
+function rowSlots(row: GalleryItem[]) {
+  const slots: Slot[] = [];
+  let width = 0;
+  const both = row.length < SHORT_ROW;
+  for (const item of row) {
+    slots.push({ kind: "photo", item });
+    width += FILM_WIDTH[filmFor(item)] + PRINT_EXTRA;
+    const s = seed(item.id);
+    const doodle = s % 3 === 0;
+    if (both || !doodle) {
+      slots.push({ kind: "note", text: NOTES[(s >> 3) % NOTES.length], key: `n-${item.id}` });
+      width += NOTE_WIDTH;
+    }
+    if (both || doodle) {
+      slots.push({ kind: "doodle", shape: s % 2 ? "heart" : "sparkle", key: `d-${item.id}` });
+      width += DOODLE_WIDTH;
+    }
+  }
+  const repeats = Math.max(1, Math.ceil(MIN_LOOP_WIDTH / width));
+  return { slots, repeats, loopWidth: width * repeats };
+}
+
+/**
+ * The whole month as rows of Instax prints drifting right to left, with little
+ * notes and doodles between them. Each photo lives in one row. Each row's track
+ * holds its loop twice and slides by half its width, so the wrap is seamless.
+ * Hovering pauses everything; with reduced motion the rows become strips you
+ * scroll by hand. Clicking a print opens it in the photo viewer.
  */
 export function MonthShowcase({ items, canDownload }: { items: GalleryItem[]; canDownload: boolean }) {
   const rows = toRows(items);
-  // When every row repeats the whole month, only the first row is announced to screen readers.
-  const repeatsAll = items.length <= ALL_IN_EACH_ROW;
   const [viewerIndex, setViewerIndex] = useState<number | null>(null);
   const open = (item: GalleryItem) => setViewerIndex(items.findIndex((i) => i.id === item.id));
 
@@ -81,8 +119,8 @@ export function MonthShowcase({ items, canDownload }: { items: GalleryItem[]; ca
     <>
       <div className="marquee" data-paused={viewerIndex !== null || undefined}>
         {rows.map((row, r) => {
-          const loop = Array.from({ length: Math.ceil(MIN_PER_LOOP / row.length) }, () => row).flat();
-          const duration = loop.length * SECONDS_PER_PHOTO * ROW_PACE[r % ROW_PACE.length];
+          const { slots, repeats, loopWidth } = rowSlots(row);
+          const duration = loopWidth * SECONDS_PER_HEIGHT * ROW_PACE[r % ROW_PACE.length];
           return (
             <div
               key={r}
@@ -90,14 +128,29 @@ export function MonthShowcase({ items, canDownload }: { items: GalleryItem[]; ca
               // Start each row at a different point in its loop so the rows look staggered.
               style={{ animationDuration: `${duration}s`, animationDelay: `-${(duration * r) / (rows.length + 1)}s` }}
             >
-              {[0, 1].map((half) =>
-                loop.map((item, i) => {
-                  const original = (r === 0 || !repeatsAll) && half === 0 && i < row.length;
+              {Array.from({ length: repeats * 2 }, (_, copy) =>
+                slots.map((slot) => {
+                  if (slot.kind === "note") {
+                    return (
+                      <span
+                        key={`${copy}-${slot.key}`}
+                        className="marquee-note"
+                        aria-hidden="true"
+                        style={{ "--tilt": `${(seed(slot.key) % 7) - 3}deg` } as React.CSSProperties}
+                      >
+                        {slot.text}
+                      </span>
+                    );
+                  }
+                  if (slot.kind === "doodle") return <Doodle key={`${copy}-${slot.key}`} shape={slot.shape} />;
+
+                  const { item } = slot;
+                  const original = copy === 0;
                   const film = filmFor(item);
                   const { tilt, lift, deco } = looksFor(item);
                   return (
                     <button
-                      key={`${half}-${i}`}
+                      key={`${copy}-${item.id}`}
                       type="button"
                       aria-hidden={!original}
                       tabIndex={original ? undefined : -1}
@@ -114,7 +167,7 @@ export function MonthShowcase({ items, canDownload }: { items: GalleryItem[]; ca
                         <img
                           src={item.thumbUrl}
                           alt={original ? (item.caption ?? "") : ""}
-                          loading={i < MIN_PER_LOOP ? "eager" : "lazy"}
+                          loading={copy < 2 ? "eager" : "lazy"}
                           decoding="async"
                           draggable={false}
                         />
@@ -141,6 +194,21 @@ export function MonthShowcase({ items, canDownload }: { items: GalleryItem[]; ca
         ) : null}
       </AnimatePresence>
     </>
+  );
+}
+
+/** A hand-drawn doodle floating between prints. */
+function Doodle({ shape }: { shape: "heart" | "sparkle" }) {
+  return (
+    <span className="marquee-doodle" data-shape={shape} aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+        {shape === "heart" ? (
+          <path d="M12 20s-7.5-4.6-7.5-10.1A4.4 4.4 0 0 1 12 7.3a4.4 4.4 0 0 1 7.5 2.6C19.5 15.4 12 20 12 20z" />
+        ) : (
+          <path d="M12 3v5M12 16v5M3 12h5M16 12h5M6.5 6.5l2.5 2.5M15 15l2.5 2.5M17.5 6.5L15 9M9 15l-2.5 2.5" />
+        )}
+      </svg>
+    </span>
   );
 }
 

@@ -168,6 +168,7 @@ h3,
 
 /* This month's photos: full-bleed rows of prints drifting right to left, edges fading out. */
 .marquee {
+  --h: 9rem;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -199,7 +200,6 @@ h3,
  * bottom. Everything scales from --h, the height of the image window.
  */
 .instax {
-  --h: 9rem;
   display: block;
   cursor: zoom-in;
   text-align: inherit;
@@ -236,6 +236,54 @@ h3,
   opacity: 0.9;
   box-shadow: 0 1px 2px rgb(0 0 0 / 0.08);
 }
+/* Little sticky notes and doodles tucked between prints. */
+.marquee-note {
+  flex: none;
+  align-self: center;
+  display: grid;
+  place-items: center;
+  width: calc(var(--h) * 0.7);
+  min-height: calc(var(--h) * 0.55);
+  margin-right: calc(var(--h) * 0.25);
+  padding: 0.4rem;
+  border-radius: 0.35rem 0.35rem 0.35rem 1.1rem;
+  background: linear-gradient(160deg, #fdf2ff, #f3e8ff);
+  box-shadow: 0 6px 14px -6px rgb(var(--glow) / 0.35);
+  font-family: var(--font-serif);
+  font-size: max(1.05rem, calc(var(--h) * 0.12));
+  line-height: 1.1;
+  text-align: center;
+  color: var(--accent);
+  transform: rotate(var(--tilt, 2deg));
+}
+.marquee-note:nth-of-type(3n) {
+  background: linear-gradient(160deg, #fff1f7, #fce7f3);
+  color: #db2777;
+}
+.marquee-doodle {
+  flex: none;
+  align-self: center;
+  width: calc(var(--h) * 0.42);
+  margin-right: calc(var(--h) * 0.28);
+  color: var(--lavender);
+  animation: doodle-bob 5s ease-in-out infinite;
+}
+.marquee-doodle[data-shape="sparkle"] {
+  width: calc(var(--h) * 0.34);
+  margin-inline: calc(var(--h) * 0.04) calc(var(--h) * 0.32);
+  color: #f0abfc;
+}
+.marquee-doodle svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+@keyframes doodle-bob {
+  50% {
+    transform: translateY(-6px) rotate(-8deg);
+  }
+}
+
 /* Puffy sticker on the corner of a print. */
 .instax-sticker {
   position: absolute;
@@ -347,12 +395,12 @@ h3,
   line-height: 1.35;
 }
 @media (min-width: 640px) {
-  .instax {
+  .marquee {
     --h: 10.5rem;
   }
 }
 @media (min-width: 1280px) {
-  .instax {
+  .marquee {
     --h: 11.5rem;
   }
 }
