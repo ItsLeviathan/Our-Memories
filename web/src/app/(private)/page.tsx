@@ -54,7 +54,8 @@ export default async function DashboardPage() {
         <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-16">
           <div>
             <p className="inline-flex items-center gap-1.5 rounded-full bg-accent-soft px-3.5 py-1 text-sm font-bold text-accent">
-              <Icon name="heart" size={14} filled className="animate-heartbeat" /> This month
+              <Icon name="heart" size={14} filled className="animate-heartbeat" />
+            {isMember ? `Hi, ${viewer.session.displayName} — welcome back` : "Welcome to our little world"}
             </p>
             <h1 id="current-month" className="text-gradient mt-4 pb-1 text-5xl font-semibold leading-[1.05] sm:text-6xl xl:text-7xl">
               {monthLabel(currentKey)}
