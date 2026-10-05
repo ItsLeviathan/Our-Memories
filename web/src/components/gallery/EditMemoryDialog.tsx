@@ -97,7 +97,7 @@ function EditForm({
         <Input type="date" required value={day} onChange={(e) => setDay(e.target.value)} />
       </Field>
       <Field label="Caption" hint="Optional">
-        <Textarea rows={2} maxLength={MAX_CAPTION_LENGTH} value={caption} onChange={(e) => setCaption(e.target.value)} placeholder="Sunday date" />
+        <Textarea rows={2} maxLength={MAX_CAPTION_LENGTH} value={caption} onChange={(e) => setCaption(e.target.value)} placeholder="Random date day ♡" />
       </Field>
       <Field label="Location" hint="Optional">
         <Input maxLength={MAX_LOCATION_LENGTH} value={location} onChange={(e) => setLocation(e.target.value)} placeholder="Where was this?" />

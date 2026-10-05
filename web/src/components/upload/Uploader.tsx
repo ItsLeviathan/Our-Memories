@@ -367,7 +367,7 @@ export function Uploader({ defaultDay, maxMb }: { defaultDay: string; maxMb: num
               />
             ) : null}
             <Field label="Caption" hint="Optional">
-              <Textarea rows={2} maxLength={MAX_CAPTION_LENGTH} value={caption} disabled={running} onChange={(e) => setCaption(e.target.value)} placeholder="Sunday date" />
+              <Textarea rows={2} maxLength={MAX_CAPTION_LENGTH} value={caption} disabled={running} onChange={(e) => setCaption(e.target.value)} placeholder="Random date day ♡" />
             </Field>
             <Field label="Location" hint="Optional">
               <Input maxLength={MAX_LOCATION_LENGTH} value={location} disabled={running} onChange={(e) => setLocation(e.target.value)} placeholder="Where was this?" />

@@ -139,7 +139,7 @@ function LoveNote({ names }: { names: string[] }) {
       <blockquote className="font-serif text-[1.6rem] leading-snug text-fg-soft sm:text-3xl">
         <p>To us —</p>
         <p className="mt-2">
-          for the sleepy calls, the silly selfies, the Sunday dates and every quiet moment in between. This is where we keep them all.
+          for the sleepy calls, the silly selfies, the random dates on whatever day we can steal for each other, and every quiet moment in between. This is where we keep them all.
         </p>
       </blockquote>
       <figcaption className="mt-5 flex items-center justify-end gap-1.5 font-serif text-2xl text-accent">
