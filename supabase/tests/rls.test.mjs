@@ -74,6 +74,13 @@ await expectErr(`select * from memories`, [], 'anon cannot read memories', 'perm
 await expectErr(`select * from share_links`, [], 'anon cannot read share links', 'permission denied');
 await expectErr(`select enqueue_recap('${C1}','2026-10')`, [], 'anon cannot enqueue', 'permission denied');
 await expectErr(`select get_month_summaries()`, [], 'anon cannot read summaries', 'permission denied');
+await expectErr(`select get_couple_month_summaries('${C1}')`, [], 'anon cannot read guest summaries directly', 'permission denied');
+await as(X);
+await expectErr(`select get_couple_month_summaries('${C1}')`, [], 'members cannot read another space via guest summaries', 'permission denied');
+await as(null, 'service_role');
+r = await db.query(`select * from get_couple_month_summaries('${C1}')`);
+ok(r.rows.length === 2 && r.rows[0].month_key === '2026-10' && Number(r.rows[0].memory_count) === 2 && !('share_active' in r.rows[0]), 'guest summaries scoped to one space, no share state');
+r = await db.query(`select * from get_couple_month_summaries('${C2}')`); ok(r.rows.length === 0, 'guest summaries of an empty space');
 
 await as(A);
 await expectErr(`select enqueue_recap('${C1}','2026-07')`, [], 'empty month cannot be generated', 'no_memories');

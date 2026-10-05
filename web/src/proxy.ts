@@ -4,6 +4,12 @@ import { NextResponse, type NextRequest } from "next/server";
 /** Paths that never require a session. */
 const PUBLIC_PATHS = [/^\/login$/, /^\/m\//, /^\/api\/public\//, /^\/api\/cron\//];
 
+/**
+ * Read-only pages that signed-out visitors may browse. The pages and route
+ * themselves decide whether guest viewing is available (see requirePageViewer).
+ */
+const GUEST_READ_PATHS = [/^\/$/, /^\/months\/[^/]+$/, /^\/api\/months\/[^/]+\/memories$/];
+
 const SAFE_METHODS = new Set(["GET", "HEAD", "OPTIONS"]);
 
 /** Rejects cross-site state-changing requests (defense in depth on top of SameSite cookies). */
@@ -48,7 +54,9 @@ export async function proxy(request: NextRequest) {
   const { data } = await supabase.auth.getClaims();
   const signedIn = Boolean(data?.claims?.sub);
   const { pathname } = request.nextUrl;
-  const isPublic = PUBLIC_PATHS.some((re) => re.test(pathname));
+  const isPublic =
+    PUBLIC_PATHS.some((re) => re.test(pathname)) ||
+    (SAFE_METHODS.has(request.method) && GUEST_READ_PATHS.some((re) => re.test(pathname)));
 
   if (!signedIn && !isPublic) {
     if (pathname.startsWith("/api/")) {

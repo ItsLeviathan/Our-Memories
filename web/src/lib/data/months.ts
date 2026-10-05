@@ -14,13 +14,24 @@ interface SummaryRow {
   cover_width: number | null;
   cover_height: number | null;
   recap_status: RecapStatus;
-  share_active: boolean;
+  share_active?: boolean;
 }
 
 /** All months that contain memories, newest first (RLS-scoped to the user). */
 export async function getMonthSummaries(client: SupabaseClient): Promise<MonthSummary[]> {
   const { data, error } = await client.rpc("get_month_summaries");
   if (error) throw error;
+  return toSummaries(data);
+}
+
+/** One space's months, for guests (admin client; share state is never exposed). */
+export async function getCoupleMonthSummaries(admin: SupabaseClient, coupleId: string): Promise<MonthSummary[]> {
+  const { data, error } = await admin.rpc("get_couple_month_summaries", { p_couple_id: coupleId });
+  if (error) throw error;
+  return toSummaries(data);
+}
+
+function toSummaries(data: unknown): Promise<MonthSummary[]> {
   return Promise.all(
     ((data ?? []) as SummaryRow[]).map(async (r) => ({
       monthKey: r.month_key,
@@ -33,7 +44,7 @@ export async function getMonthSummaries(client: SupabaseClient): Promise<MonthSu
       coverWidth: r.cover_width,
       coverHeight: r.cover_height,
       recapStatus: r.recap_status,
-      shareActive: r.share_active,
+      shareActive: r.share_active ?? false,
     })),
   );
 }

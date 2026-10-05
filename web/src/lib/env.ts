@@ -27,6 +27,10 @@ const schema = z.object({
 
   UPLOAD_MAX_MB: z.coerce.number().positive().default(40),
 
+  // Optional: which memory space signed-out visitors can browse (read-only).
+  // Defaults to the only space when there is exactly one.
+  PUBLIC_COUPLE_ID: z.preprocess(emptyToUndefined, z.uuid().optional()),
+
   // Optional: start the GitHub Actions recap worker instantly (see .github/workflows).
   GITHUB_DISPATCH_TOKEN: z.preprocess(emptyToUndefined, z.string().optional()),
   GITHUB_REPOSITORY: z.preprocess(

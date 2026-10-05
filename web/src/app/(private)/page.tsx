@@ -1,20 +1,21 @@
 import { MonthCard } from "@/components/month/MonthCard";
 import { MonthShowcase } from "@/components/month/MonthShowcase";
 import { RecapButton } from "@/components/recap/RecapPanel";
-import { ButtonLink } from "@/components/ui/Button";
+import { ButtonLink, buttonClasses } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
-import { requirePageSession } from "@/lib/auth";
+import { requirePageViewer } from "@/lib/auth";
 import { listMonthMemories } from "@/lib/data/memories";
-import { getMonthSummaries } from "@/lib/data/months";
+import { getCoupleMonthSummaries, getMonthSummaries } from "@/lib/data/months";
 import { getRecap } from "@/lib/data/recaps";
 import { env } from "@/lib/env";
 import { currentMonthKeyIn, monthLabel, pluralize } from "@/lib/months";
 import type { GalleryItem } from "@/lib/types";
 
 export default async function DashboardPage() {
-  const session = await requirePageSession();
+  const viewer = await requirePageViewer();
+  const isMember = viewer.kind === "member";
   const currentKey = currentMonthKeyIn(env().APP_TIMEZONE);
-  const months = await getMonthSummaries(session.supabase);
+  const months = isMember ? await getMonthSummaries(viewer.client) : await getCoupleMonthSummaries(viewer.client, viewer.coupleId);
 
   if (months.length === 0) {
     return (
@@ -25,9 +26,11 @@ export default async function DashboardPage() {
           </p>
           <h1 className="mt-5 text-4xl font-semibold sm:text-5xl">No memories yet</h1>
           <p className="mt-4 font-serif text-3xl">Every little moment starts somewhere ♡</p>
-          <ButtonLink href="/add" size="lg" icon="plus" className="mt-10">
-            Add your first memory
-          </ButtonLink>
+          {isMember ? (
+            <ButtonLink href="/add" size="lg" icon="plus" className="mt-10">
+              Add your first memory
+            </ButtonLink>
+          ) : null}
         </div>
       </section>
     );
@@ -37,8 +40,8 @@ export default async function DashboardPage() {
   const previous = months.filter((m) => m.monthKey !== currentKey);
   const [preview, recap] = current
     ? await Promise.all([
-        listMonthMemories(session.supabase, { coupleId: session.coupleId, monthKey: currentKey, limit: 60, includeHd: false }),
-        getRecap(session.supabase, session.coupleId, currentKey),
+        listMonthMemories(viewer.client, { coupleId: viewer.coupleId, monthKey: currentKey, limit: 60, includeHd: false }),
+        getRecap(viewer.client, viewer.coupleId, currentKey),
       ])
     : [null, null];
 
@@ -63,15 +66,23 @@ export default async function DashboardPage() {
             </div>
           )}
           <div className="mt-8 flex flex-wrap items-start gap-2.5">
-            <ButtonLink href="/add" icon="plus">
-              Add memories
-            </ButtonLink>
+            {isMember ? (
+              <ButtonLink href="/add" icon="plus">
+                Add memories
+              </ButtonLink>
+            ) : null}
             {current ? (
               <>
-                <ButtonLink href={`/months/${currentKey}`} variant="secondary">
+                <ButtonLink href={`/months/${currentKey}`} variant={isMember ? "secondary" : "primary"}>
                   View month
                 </ButtonLink>
-                {recap ? <RecapButton monthKey={currentKey} initial={recap} /> : null}
+                {!recap ? null : isMember ? (
+                  <RecapButton monthKey={currentKey} initial={recap} />
+                ) : recap.status === "ready" ? (
+                  <a href={`/months/${currentKey}#recap`} className={buttonClasses({ variant: "secondary" })}>
+                    <Icon name="play" /> Watch recap
+                  </a>
+                ) : null}
               </>
             ) : null}
           </div>

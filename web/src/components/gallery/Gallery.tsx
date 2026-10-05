@@ -11,7 +11,11 @@ import { computeJustifiedLayout, gapFor, targetRowHeightFor } from "@/lib/galler
 import { formatShortDay } from "@/lib/months";
 import type { GalleryItem, GalleryPage } from "@/lib/types";
 
-export type GalleryMode = { kind: "private"; monthKey: string } | { kind: "public"; token: string; allowDownloads: boolean };
+export type GalleryMode =
+  | { kind: "private"; monthKey: string }
+  /** Signed-out visitor browsing the site: view only, no downloads. */
+  | { kind: "guest"; monthKey: string }
+  | { kind: "public"; token: string; allowDownloads: boolean };
 
 function useContainerWidth() {
   const ref = useRef<HTMLDivElement>(null);
@@ -40,7 +44,7 @@ export function Gallery({ initial, mode }: { initial: GalleryPage; mode: Gallery
 
   const isPrivate = mode.kind === "private";
   const moreUrl =
-    mode.kind === "private" ? `/api/months/${mode.monthKey}/memories` : `/api/public/${mode.token}/memories`;
+    mode.kind === "public" ? `/api/public/${mode.token}/memories` : `/api/months/${mode.monthKey}/memories`;
 
   const loadMore = useCallback(async () => {
     if (!cursor || loadingMore) return;
@@ -81,6 +85,7 @@ export function Gallery({ initial, mode }: { initial: GalleryPage; mode: Gallery
 
   const downloadUrl = (item: GalleryItem) => {
     if (mode.kind === "private") return `/api/memories/${item.id}/download`;
+    if (mode.kind === "guest") return null;
     return mode.allowDownloads ? `/api/public/${mode.token}/memories/${item.id}/download` : null;
   };
 
