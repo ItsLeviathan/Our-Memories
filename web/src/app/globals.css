@@ -35,36 +35,7 @@
   color-scheme: light;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #110b1f;
-    --surface: #1a1230;
-    --surface-2: #241a40;
-    --fg: #f3eeff;
-    --fg-soft: #d9cdf7;
-    --muted: #a597c9;
-    --line: #2e2350;
-    --line-strong: #44366f;
-    --accent: #b794ff;
-    --accent-soft: #2e2054;
-    --lavender: #e2a6ff;
-    --on-accent: #1a0b33;
-    --grad-from: #c6a8ff;
-    --grad-to: #9b6bff;
-    --glow: 155 107 255;
-    --blob-1: rgb(124 58 237 / 0.22);
-    --blob-2: rgb(192 38 211 / 0.12);
-    --blob-3: rgb(79 70 229 / 0.14);
-    --tape-1: rgb(155 107 255 / 0.55);
-    --tape-2: rgb(217 70 239 / 0.45);
-    --danger: #ff8a94;
-    --success: #86d4ae;
-    --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 10px 30px rgb(0 0 0 / 0.38);
-    color-scheme: dark;
-  }
-}
-
-/* The public album is always presented in a dreamy midnight-violet theme. */
+/* Dark surfaces are reserved for the full-screen photo viewer. */
 [data-theme="dark"] {
   --bg: #0e0919;
   --surface: #18112c;
@@ -193,6 +164,59 @@ h3,
 .polaroid-item:focus-visible .polaroid {
   transform: rotate(0deg) translateY(-4px) scale(1.01);
   box-shadow: 0 2px 4px rgb(var(--glow) / 0.08), 0 18px 40px rgb(var(--glow) / 0.2);
+}
+
+/* This month's living collage: a slowly turning violet frame that floats and glows. */
+@property --ring-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+.showcase-ring {
+  background: conic-gradient(from var(--ring-angle), var(--grad-from), var(--lavender), #f0abfc, #a5b4fc, var(--grad-to), var(--grad-from));
+  animation: ring-spin 9s linear infinite;
+}
+@keyframes ring-spin {
+  to {
+    --ring-angle: 360deg;
+  }
+}
+.showcase-glow {
+  background: radial-gradient(closest-side, rgb(var(--glow) / 0.35), rgb(240 171 252 / 0.2) 60%, transparent);
+  animation: glow-breathe 6s ease-in-out infinite;
+}
+@keyframes glow-breathe {
+  50% {
+    opacity: 0.55;
+    transform: scale(0.96);
+  }
+}
+.showcase-float {
+  animation: float-soft 7s ease-in-out infinite;
+}
+@keyframes float-soft {
+  50% {
+    transform: translateY(-8px);
+  }
+}
+.showcase-bob {
+  animation: bob 5s ease-in-out infinite;
+}
+@keyframes bob {
+  50% {
+    transform: translateY(-6px) rotate(-8deg);
+  }
+}
+.showcase-progress {
+  width: 0;
+  animation-name: progress-fill;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+@keyframes progress-fill {
+  to {
+    width: 100%;
+  }
 }
 
 /* Little washi-tape strip on top of a polaroid. */
@@ -338,7 +362,8 @@ dialog[open] {
   .photo-fade {
     opacity: 1;
   }
-  .floating-hearts {
+  .floating-hearts,
+  .showcase-glow {
     display: none;
   }
   .polaroid {

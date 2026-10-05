@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { Gallery } from "@/components/gallery/Gallery";
 import { RecapPlayer } from "@/components/recap/RecapPlayer";
-import { DarkDocument } from "@/components/ui/DarkDocument";
 import { Icon } from "@/components/ui/Icon";
 import { listMonthMemories, getMonthStats } from "@/lib/data/memories";
 import { getRecap } from "@/lib/data/recaps";
@@ -39,8 +38,7 @@ export default async function SharedAlbumPage({ params }: PageProps<"/m/[token]"
   const name = monthName(share.monthKey);
 
   return (
-    <div data-theme="dark" className="min-h-dvh text-fg">
-      <DarkDocument />
+    <div className="min-h-dvh text-fg">
       <header className="relative flex min-h-[78dvh] flex-col items-center justify-center px-6 text-center sm:min-h-[86dvh]">
         <p className="inline-flex items-center gap-1.5 rounded-full bg-accent-soft px-4 py-1.5 text-sm font-bold text-accent">
           <Icon name="heart" size={14} filled className="animate-heartbeat" /> A shared album
@@ -99,8 +97,7 @@ export default async function SharedAlbumPage({ params }: PageProps<"/m/[token]"
 
 function Unavailable({ rateLimited }: { rateLimited: boolean }) {
   return (
-    <main data-theme="dark" className="grid min-h-dvh place-items-center px-6 text-center text-fg">
-      <DarkDocument />
+    <main className="grid min-h-dvh place-items-center px-6 text-center text-fg">
       <div className="max-w-md">
         <h1 className="text-4xl font-semibold sm:text-5xl">
           {rateLimited ? "Please wait a moment." : "This album isn't available."}

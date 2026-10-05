@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { MonthCard } from "@/components/month/MonthCard";
+import { MonthShowcase } from "@/components/month/MonthShowcase";
 import { RecapButton } from "@/components/recap/RecapPanel";
 import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
@@ -77,7 +77,7 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        {preview && preview.items.length ? <Mosaic items={pickMosaic(preview.items)} href={`/months/${currentKey}`} /> : null}
+        {preview && preview.items.length ? <MonthShowcase items={pickShowcase(preview.items)} href={`/months/${currentKey}`} /> : null}
       </section>
 
       {previous.length ? (
@@ -100,64 +100,8 @@ export default async function DashboardPage() {
   );
 }
 
-/** Favorites first, then the most recent — up to five photos. */
-function pickMosaic(items: GalleryItem[]) {
+/** Favorites first, then the most recent — up to ten photos to cycle through. */
+function pickShowcase(items: GalleryItem[]) {
   const sorted = [...items].sort((a, b) => Number(b.isFavorite) - Number(a.isFavorite) || b.capturedAt.localeCompare(a.capturedAt));
-  return sorted.slice(0, 5);
-}
-
-/**
- * Collage of the month's highlights. Phones: hero on top, up to two squares below.
- * Tablet/desktop: a fixed 16:10 frame — hero fills two thirds, the rest stack on
- * the right — so the photos always fill the frame with no gaps.
- */
-function Mosaic({ items, href }: { items: GalleryItem[]; href: string }) {
-  const [hero, ...rest] = items;
-  const side = rest.slice(0, 2);
-  return (
-    <Link
-      href={href}
-      className="group block rounded-[2rem] border-2 border-line bg-surface p-2.5 shadow-soft transition-transform duration-500 ease-out-soft hover:-translate-y-1 sm:p-3"
-      aria-label="View this month"
-    >
-      {/* Phones */}
-      <div className="flex flex-col gap-2.5 sm:hidden">
-        <MosaicImage item={hero} className="aspect-[4/3]" eager />
-        {side.length ? (
-          <div className={`grid gap-2.5 ${side.length === 2 ? "grid-cols-2" : "grid-cols-1"}`}>
-            {side.map((item) => (
-              <MosaicImage key={item.id} item={item} className={side.length === 2 ? "aspect-square" : "aspect-[16/9]"} />
-            ))}
-          </div>
-        ) : null}
-      </div>
-
-      {/* Tablet and desktop */}
-      <div
-        className={`hidden aspect-[16/10] gap-3 sm:grid ${side.length ? "grid-cols-3" : "grid-cols-1"} ${side.length === 2 ? "grid-rows-2" : "grid-rows-1"}`}
-      >
-        <MosaicImage item={hero} className={`h-full ${side.length ? "col-span-2" : ""} ${side.length === 2 ? "row-span-2" : ""}`} eager />
-        {side.map((item) => (
-          <MosaicImage key={item.id} item={item} className="h-full" />
-        ))}
-      </div>
-    </Link>
-  );
-}
-
-function MosaicImage({ item, className, eager }: { item: GalleryItem; className: string; eager?: boolean }) {
-  return (
-    <div className={`min-h-0 overflow-hidden rounded-2xl bg-surface-2 sm:rounded-3xl ${className}`}>
-      {/* eslint-disable-next-line @next/next/no-img-element -- presigned R2 URL */}
-      <img
-        src={item.thumbUrl}
-        srcSet={`${item.thumbUrl} 800w, ${item.displayUrl} 1600w`}
-        sizes="(min-width: 1024px) 40vw, 100vw"
-        alt={item.caption ?? ""}
-        loading={eager ? "eager" : "lazy"}
-        decoding="async"
-        className="h-full w-full object-cover transition-transform duration-700 ease-out-soft group-hover:scale-[1.02]"
-      />
-    </div>
-  );
+  return sorted.slice(0, 10);
 }
