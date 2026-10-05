@@ -84,7 +84,7 @@ export function MonthShowcase({ items, canDownload }: { items: GalleryItem[]; ca
                           draggable={false}
                         />
                       </span>
-                      <span className="instax-caption">{item.caption || dayFormat.format(new Date(`${item.day}T00:00:00Z`))}</span>
+                      <Caption item={item} film={filmFor(item)} />
                     </button>
                   );
                 }),
@@ -106,5 +106,24 @@ export function MonthShowcase({ items, canDownload }: { items: GalleryItem[]; ca
         ) : null}
       </AnimatePresence>
     </>
+  );
+}
+
+/** Roughly how much long-caption text fits in 7 lines on each film width. */
+const CAPTION_FITS: Record<ReturnType<typeof filmFor>, number> = { mini: 120, square: 170, wide: 290 };
+
+/**
+ * The note written under the photo: its caption, or the date when there is none.
+ * A caption too long for the print gets a "read more" hint; clicking the print
+ * opens the viewer, which shows it in full.
+ */
+function Caption({ item, film }: { item: GalleryItem; film: ReturnType<typeof filmFor> }) {
+  const text = item.caption?.trim() || dayFormat.format(new Date(`${item.day}T00:00:00Z`));
+  const length = text.length <= 24 ? "short" : text.length <= 70 ? "medium" : "long";
+  return (
+    <span className="instax-caption" data-length={length}>
+      <span>{text}</span>
+      {text.length > CAPTION_FITS[film] ? <span className="instax-more">Tap to read more ♡</span> : null}
+    </span>
   );
 }
