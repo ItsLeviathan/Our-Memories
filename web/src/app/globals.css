@@ -166,56 +166,63 @@ h3,
   box-shadow: 0 2px 4px rgb(var(--glow) / 0.08), 0 18px 40px rgb(var(--glow) / 0.2);
 }
 
-/* This month's living collage: a slowly turning violet frame that floats and glows. */
-@property --ring-angle {
-  syntax: "<angle>";
-  inherits: false;
-  initial-value: 0deg;
+/* This month's film strip: full-bleed, edges fading out, drifting right to left. */
+.marquee {
+  margin-inline: calc(50% - 50vw);
+  overflow: hidden;
+  padding-block: 1.25rem 2rem;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
 }
-.showcase-ring {
-  background: conic-gradient(from var(--ring-angle), var(--grad-from), var(--lavender), #f0abfc, #a5b4fc, var(--grad-to), var(--grad-from));
-  animation: ring-spin 9s linear infinite;
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-left linear infinite;
 }
-@keyframes ring-spin {
+.marquee:hover .marquee-track,
+.marquee:focus-visible .marquee-track {
+  animation-play-state: paused;
+}
+@keyframes marquee-left {
   to {
-    --ring-angle: 360deg;
+    transform: translateX(-50%);
   }
 }
-.showcase-glow {
-  background: radial-gradient(closest-side, rgb(var(--glow) / 0.35), rgb(240 171 252 / 0.2) 60%, transparent);
-  animation: glow-breathe 6s ease-in-out infinite;
+.marquee-photo {
+  flex: none;
+  margin-right: 1.5rem;
+  padding: 0.6rem 0.6rem 0.75rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 1.1rem;
+  box-shadow: var(--shadow);
+  max-width: 22rem;
+  transform: rotate(-1.2deg);
+  transition: transform 450ms var(--ease-out-soft), box-shadow 450ms var(--ease-out-soft);
 }
-@keyframes glow-breathe {
-  50% {
-    opacity: 0.55;
-    transform: scale(0.96);
+.marquee-photo:nth-child(even) {
+  transform: rotate(1.4deg) translateY(0.75rem);
+}
+.marquee-photo:hover {
+  transform: rotate(0deg) translateY(-6px) scale(1.03);
+  box-shadow: 0 2px 4px rgb(var(--glow) / 0.08), 0 18px 40px rgb(var(--glow) / 0.22);
+}
+.marquee-photo img {
+  display: block;
+  height: 15rem;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  border-radius: 0.7rem;
+  background: var(--surface-2);
+}
+@media (min-width: 640px) {
+  .marquee-photo {
+    max-width: 30rem;
+    margin-right: 2rem;
   }
-}
-.showcase-float {
-  animation: float-soft 7s ease-in-out infinite;
-}
-@keyframes float-soft {
-  50% {
-    transform: translateY(-8px);
-  }
-}
-.showcase-bob {
-  animation: bob 5s ease-in-out infinite;
-}
-@keyframes bob {
-  50% {
-    transform: translateY(-6px) rotate(-8deg);
-  }
-}
-.showcase-progress {
-  width: 0;
-  animation-name: progress-fill;
-  animation-timing-function: linear;
-  animation-fill-mode: forwards;
-}
-@keyframes progress-fill {
-  to {
-    width: 100%;
+  .marquee-photo img {
+    height: 20rem;
   }
 }
 
@@ -362,9 +369,15 @@ dialog[open] {
   .photo-fade {
     opacity: 1;
   }
-  .floating-hearts,
-  .showcase-glow {
+  .floating-hearts {
     display: none;
+  }
+  /* No drifting: the strip becomes a row you scroll by hand. */
+  .marquee {
+    overflow-x: auto;
+  }
+  .marquee-track {
+    animation: none !important;
   }
   .polaroid {
     transform: none;

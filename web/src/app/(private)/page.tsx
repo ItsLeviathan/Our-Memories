@@ -44,7 +44,7 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-20 sm:space-y-28">
-      <section aria-labelledby="current-month" className="grid items-center gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
+      <section aria-labelledby="current-month">
         <div>
           <p className="inline-flex items-center gap-1.5 rounded-full bg-accent-soft px-3.5 py-1 text-sm font-bold text-accent">
             <Icon name="heart" size={14} filled className="animate-heartbeat" /> This month
@@ -77,7 +77,11 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        {preview && preview.items.length ? <MonthShowcase items={pickShowcase(preview.items)} href={`/months/${currentKey}`} /> : null}
+        {preview && preview.items.length ? (
+          <div className="mt-12 sm:mt-14">
+            <MonthShowcase items={pickShowcase(preview.items)} href={`/months/${currentKey}`} />
+          </div>
+        ) : null}
       </section>
 
       {previous.length ? (
@@ -100,8 +104,7 @@ export default async function DashboardPage() {
   );
 }
 
-/** Favorites first, then the most recent — up to ten photos to cycle through. */
+/** The month in the order it happened, for the film strip. */
 function pickShowcase(items: GalleryItem[]) {
-  const sorted = [...items].sort((a, b) => Number(b.isFavorite) - Number(a.isFavorite) || b.capturedAt.localeCompare(a.capturedAt));
-  return sorted.slice(0, 10);
+  return [...items].sort((a, b) => a.capturedAt.localeCompare(b.capturedAt));
 }
