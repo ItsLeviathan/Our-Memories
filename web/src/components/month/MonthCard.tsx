@@ -3,7 +3,7 @@ import { Icon } from "@/components/ui/Icon";
 import { monthLabel, pluralize } from "@/lib/months";
 import type { MonthSummary } from "@/lib/types";
 
-export function MonthCard({ month }: { month: MonthSummary }) {
+export function MonthCard({ month, isCurrent = false }: { month: MonthSummary; isCurrent?: boolean }) {
   return (
     <Link href={`/months/${month.monthKey}`} className="polaroid-item group block">
       <div className="polaroid relative">
@@ -24,6 +24,7 @@ export function MonthCard({ month }: { month: MonthSummary }) {
             </span>
           )}
           <div className="pointer-events-none absolute left-2.5 top-2.5 flex gap-1.5">
+            {isCurrent ? <Badge icon="heart">This month</Badge> : null}
             {month.recapStatus === "ready" ? <Badge icon="play">Recap</Badge> : null}
             {month.shareActive ? <Badge icon="link">Shared</Badge> : null}
           </div>
@@ -40,10 +41,10 @@ export function MonthCard({ month }: { month: MonthSummary }) {
   );
 }
 
-function Badge({ icon, children }: { icon: "play" | "link"; children: React.ReactNode }) {
+function Badge({ icon, children }: { icon: "play" | "link" | "heart"; children: React.ReactNode }) {
   return (
     <span className="inline-flex items-center gap-1 rounded-full bg-white/85 px-2.5 py-1 text-xs font-bold text-[#6d28d9] shadow-sm backdrop-blur-md">
-      <Icon name={icon} size={12} filled={icon === "play"} />
+      <Icon name={icon} size={12} filled={icon !== "link"} />
       {children}
     </span>
   );

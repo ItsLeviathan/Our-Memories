@@ -37,7 +37,6 @@ export default async function DashboardPage() {
   }
 
   const current = months.find((m) => m.monthKey === currentKey);
-  const previous = months.filter((m) => m.monthKey !== currentKey);
   const [preview, recap] = current
     ? await Promise.all([
         listMonthMemories(viewer.client, { coupleId: viewer.coupleId, monthKey: currentKey, limit: 100, includeHd: false }),
@@ -90,27 +89,26 @@ export default async function DashboardPage() {
 
         {preview && preview.items.length ? (
           <div className="mt-12 sm:mt-14">
-            <MonthShowcase items={pickShowcase(preview.items)} href={`/months/${currentKey}`} />
+            <MonthShowcase items={pickShowcase(preview.items)} canDownload={isMember} />
           </div>
         ) : null}
       </section>
 
-      {previous.length ? (
-        <section aria-labelledby="previous-months">
-          <div className="mb-10 flex items-baseline justify-between border-b-2 border-dashed border-line pb-4">
-            <h2 id="previous-months" className="flex items-center gap-2 text-2xl font-semibold sm:text-3xl">
-              <Icon name="heart" filled size={22} className="text-accent" />
-              {current ? "Previous months" : "Your months"}
-            </h2>
-            <span className="rounded-full bg-accent-soft px-3 py-0.5 text-sm font-bold text-accent">{pluralize(previous.length, "month")}</span>
-          </div>
-          <div className="grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
-            {previous.map((m) => (
-              <MonthCard key={m.monthKey} month={m} />
-            ))}
-          </div>
-        </section>
-      ) : null}
+      {/* Every month gets a card, this month included (always first: newest first). */}
+      <section aria-labelledby="our-months">
+        <div className="mb-10 flex items-baseline justify-between border-b-2 border-dashed border-line pb-4">
+          <h2 id="our-months" className="flex items-center gap-2 text-2xl font-semibold sm:text-3xl">
+            <Icon name="heart" filled size={22} className="text-accent" />
+            Our months
+          </h2>
+          <span className="rounded-full bg-accent-soft px-3 py-0.5 text-sm font-bold text-accent">{pluralize(months.length, "month")}</span>
+        </div>
+        <div className="grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+          {months.map((m) => (
+            <MonthCard key={m.monthKey} month={m} isCurrent={m.monthKey === currentKey} />
+          ))}
+        </div>
+      </section>
     </div>
   );
 }
