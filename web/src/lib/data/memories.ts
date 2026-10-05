@@ -146,3 +146,18 @@ export async function getMonthStats(client: SupabaseClient, coupleId: string, mo
     lastDay: days[days.length - 1] ?? null,
   };
 }
+
+/** Every ready photo of a month, page by page (for the home page's moving prints). */
+export async function listAllMonthMemories(
+  client: SupabaseClient,
+  opts: { coupleId: string; monthKey: string; includeHd?: boolean },
+): Promise<GalleryItem[]> {
+  const items: GalleryItem[] = [];
+  let cursor: string | null = null;
+  do {
+    const page: GalleryPage = await listMonthMemories(client, { ...opts, cursor, limit: 100 });
+    items.push(...page.items);
+    cursor = page.nextCursor;
+  } while (cursor);
+  return items;
+}

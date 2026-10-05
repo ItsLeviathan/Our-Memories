@@ -5,7 +5,7 @@ import { ButtonLink, buttonClasses } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { requirePageViewer } from "@/lib/auth";
 import { getCoupleNames } from "@/lib/data/couple";
-import { listMonthMemories } from "@/lib/data/memories";
+import { listAllMonthMemories } from "@/lib/data/memories";
 import { getCoupleMonthSummaries, getMonthSummaries } from "@/lib/data/months";
 import { getRecap } from "@/lib/data/recaps";
 import { env } from "@/lib/env";
@@ -43,7 +43,7 @@ export default async function DashboardPage() {
   const current = months.find((m) => m.monthKey === currentKey);
   const [preview, recap] = current
     ? await Promise.all([
-        listMonthMemories(viewer.client, { coupleId: viewer.coupleId, monthKey: currentKey, limit: 100, includeHd: false }),
+        listAllMonthMemories(viewer.client, { coupleId: viewer.coupleId, monthKey: currentKey, includeHd: false }),
         getRecap(viewer.client, viewer.coupleId, currentKey),
       ])
     : [null, null];
@@ -95,14 +95,14 @@ export default async function DashboardPage() {
           <LoveNote names={names} />
         </div>
 
-        {preview && preview.items.length ? (
+        {preview && preview.length ? (
           <div className="mt-14 sm:mt-16">
             <p className="flex items-center justify-center gap-2 text-center text-[0.95rem] font-bold text-muted">
               <Icon name="heart" size={14} filled className="text-lavender" />
               Our month in little prints — tap one to look closer
               <Icon name="heart" size={14} filled className="text-lavender" />
             </p>
-            <MonthShowcase items={pickShowcase(preview.items)} canDownload={isMember} />
+            <MonthShowcase items={pickShowcase(preview)} canDownload={isMember} />
           </div>
         ) : null}
       </section>
