@@ -40,7 +40,7 @@ export default async function DashboardPage() {
   const previous = months.filter((m) => m.monthKey !== currentKey);
   const [preview, recap] = current
     ? await Promise.all([
-        listMonthMemories(viewer.client, { coupleId: viewer.coupleId, monthKey: currentKey, limit: 60, includeHd: false }),
+        listMonthMemories(viewer.client, { coupleId: viewer.coupleId, monthKey: currentKey, limit: 100, includeHd: false }),
         getRecap(viewer.client, viewer.coupleId, currentKey),
       ])
     : [null, null];

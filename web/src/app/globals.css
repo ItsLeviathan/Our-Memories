@@ -166,16 +166,20 @@ h3,
   box-shadow: 0 2px 4px rgb(var(--glow) / 0.08), 0 18px 40px rgb(var(--glow) / 0.2);
 }
 
-/* This month's film strip: full-bleed, edges fading out, drifting right to left. */
+/* This month's photos: full-bleed rows of prints drifting right to left, edges fading out. */
 .marquee {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
   margin-inline: calc(50% - 50vw);
   overflow: hidden;
-  padding-block: 1.25rem 2rem;
+  padding-block: 1.25rem 2.25rem;
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
   mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
 }
 .marquee-track {
   display: flex;
+  align-items: flex-start;
   width: max-content;
   animation: marquee-left linear infinite;
 }
@@ -188,41 +192,93 @@ h3,
     transform: translateX(-50%);
   }
 }
-.marquee-photo {
+
+/*
+ * Instax instant-film print. Proportions follow the real film (image 62mm tall):
+ * mini 46mm wide, square 62mm, wide 99mm; borders ~4mm sides, ~6mm top, ~17mm
+ * bottom. Everything scales from --h, the height of the image window.
+ */
+.instax {
+  --h: 9.5rem;
+  --w: calc(var(--h) * 0.742);
+  position: relative;
   flex: none;
-  margin-right: 1.5rem;
-  padding: 0.6rem 0.6rem 0.75rem;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 1.1rem;
-  box-shadow: var(--shadow);
-  max-width: 22rem;
-  transform: rotate(-1.2deg);
+  margin-right: calc(var(--h) * 0.2);
+  padding: calc(var(--h) * 0.1) calc(var(--h) * 0.068) 0;
+  border-radius: calc(var(--h) * 0.035);
+  background:
+    radial-gradient(120% 60% at 30% 0%, rgb(255 255 255 / 0.9), transparent 60%),
+    linear-gradient(170deg, #fffefb, #f7f3ec 70%, #f1ece3);
+  box-shadow:
+    0 1px 1px rgb(42 29 69 / 0.08),
+    0 6px 14px -4px rgb(var(--glow) / 0.18),
+    0 18px 32px -14px rgb(var(--glow) / 0.28),
+    inset 0 0 0 1px rgb(0 0 0 / 0.035);
+  transform: rotate(-1.6deg);
   transition: transform 450ms var(--ease-out-soft), box-shadow 450ms var(--ease-out-soft);
 }
-.marquee-photo:nth-child(even) {
-  transform: rotate(1.4deg) translateY(0.75rem);
+.instax[data-film="square"] {
+  --w: var(--h);
 }
-.marquee-photo:hover {
-  transform: rotate(0deg) translateY(-6px) scale(1.03);
-  box-shadow: 0 2px 4px rgb(var(--glow) / 0.08), 0 18px 40px rgb(var(--glow) / 0.22);
+.instax[data-film="wide"] {
+  --w: calc(var(--h) * 1.597);
 }
-.marquee-photo img {
-  display: block;
-  height: 15rem;
-  width: auto;
-  max-width: 100%;
-  object-fit: contain;
-  border-radius: 0.7rem;
-  background: var(--surface-2);
+.instax:nth-child(even) {
+  transform: rotate(1.4deg) translateY(calc(var(--h) * 0.06));
+}
+.instax:hover {
+  z-index: 1;
+  transform: rotate(0deg) translateY(-6px) scale(1.05);
+  box-shadow:
+    0 2px 4px rgb(42 29 69 / 0.08),
+    0 22px 44px -12px rgb(var(--glow) / 0.4),
+    inset 0 0 0 1px rgb(0 0 0 / 0.035);
+}
+.instax-photo {
+  position: relative;
+  width: var(--w);
+  height: var(--h);
+  overflow: hidden;
+  border-radius: 1px;
+  background: #1d1530;
+}
+.instax-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* A touch of instant-film warmth. */
+  filter: saturate(1.06) contrast(1.03) sepia(0.06);
+}
+/* Glossy sheen and the slight shadow where the print meets the frame. */
+.instax-photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(125deg, rgb(255 255 255 / 0.22), transparent 38%, transparent 70%, rgb(255 255 255 / 0.08));
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.12), inset 0 1px 6px rgb(0 0 0 / 0.18);
+}
+.instax figcaption {
+  width: var(--w);
+  height: calc(var(--h) * 0.27);
+  padding-inline: 0.25rem;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-align: center;
+  font-family: var(--font-serif);
+  font-size: calc(var(--h) * 0.11);
+  line-height: calc(var(--h) * 0.27);
+  color: var(--fg-soft);
 }
 @media (min-width: 640px) {
-  .marquee-photo {
-    max-width: 30rem;
-    margin-right: 2rem;
+  .instax {
+    --h: 12rem;
   }
-  .marquee-photo img {
-    height: 20rem;
+}
+@media (min-width: 1280px) {
+  .instax {
+    --h: 13rem;
   }
 }
 
